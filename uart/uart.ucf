@@ -9,7 +9,7 @@ NET USER_CLOCK        LOC = V10 | IOSTANDARD = LVCMOS33;               # "USER_C
 NET USER_CLOCK TNM_NET = USER_CLOCK;
 TIMESPEC TS_USER_CLOCK = PERIOD USER_CLOCK 40000 kHz;
 
-NET	"rst" LOC = "V4";
+NET	"send_trigger" LOC = "V4";
 ############################################################################	
 # User LEDs			
 ############################################################################	

@@ -4,10 +4,10 @@
 // Company: 
 // Engineer:
 //
-// Create Date:   13:58:43 04/08/1015
+// Create Date:   20:45:18 04/08/2015
 // Design Name:   main
-// Module Name:   /home/alex/verilog/serialtest/main_tb.v
-// Project Name:  serialtest
+// Module Name:   /home/alex/verilog/misc/uart/main_tb.v
+// Project Name:  uart
 // Target Device:  
 // Tool versions:  
 // Description: 
@@ -25,52 +25,43 @@
 module main_tb;
 
 	// Inputs
-	reg clk;
+	reg user_clock;
 	reg rst;
-	reg serial_rx;
+	reg usb_rs232_rxd;
+	reg send_trigger;
 
 	// Outputs
-	wire serial_tx;
+	wire usb_rs232_txd;
+	wire gpio_led1;
 
 	// Instantiate the Unit Under Test (UUT)
 	main uut (
-		.clk(clk), 
+		.user_clock(user_clock), 
 		.rst(rst), 
-		.serial_rx(serial_rx), 
-		.serial_tx(serial_tx)
+		.usb_rs232_rxd(usb_rs232_rxd), 
+		.send_trigger(send_trigger), 
+		.usb_rs232_txd(usb_rs232_txd), 
+		.gpio_led1(gpio_led1)
 	);
 
 	initial begin
 		// Initialize Inputs
-		clk = 0;
-		rst = 1;
-		serial_rx = 0;
-		// Wait 100 ns for global reset to finish
-		#110;
+		user_clock = 0;
 		rst = 0;
+		usb_rs232_rxd = 0;
+		send_trigger = 0;
 
-		serial_rx <= 0;
-		#20 serial_rx <= 1;
-		#20 serial_rx <= 0;
-		#20 serial_rx <= 0;
-		#20 serial_rx <= 1;
-		#20 serial_rx <= 0;
-		#20 serial_rx <= 0;
-		#20 serial_rx <= 0;
-		#20 serial_rx <= 1;
-		#20 serial_rx <= 0;
-		#20 serial_rx <= 0;
-		#20 serial_rx <= 0;
-		#20 serial_rx <= 0;
-		#20 serial_rx <= 1;
-		#20 serial_rx <= 0;
-
+		// Wait 100 ns for global reset to finish
+		// usb_rs232_rxd <= 0'bZ;
+		#100;
+		send_trigger <= 1;
+		 #800 send_trigger <= 0;
         
 		// Add stimulus here
 
 	end
- 	always begin
-		#10	clk <= ~clk;
-	end     
+	always 
+		#10 user_clock <= ~user_clock;
+      
 endmodule
 

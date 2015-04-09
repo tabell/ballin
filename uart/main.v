@@ -22,11 +22,12 @@ module main(
     input user_clock,
     input rst,
     input usb_rs232_rxd,
+    input send_trigger,
     output usb_rs232_txd,
 	output gpio_led1
     );
 	// internal
-	reg [8:0] buffer;
+	reg [8:0] buffer = 0;
 	wire user_clock;
 
 	// outputs
@@ -36,37 +37,65 @@ module main(
 	// inputs
 	wire rst;
 	wire usb_rs232_rxd;
+	wire send_trigger;
 
-	reg [25:0] counter;
-	reg [5:0] counter_baud; // count to 43
-	reg [2:0] counter_symbol; // count to 43
+	reg [25:0] counter = 0;
+	reg [5:0] counter_baud = 0; // count to 43
+	reg [2:0] counter_symbol = 0; // count to 7
 
-	reg [7:0] data_counter;
-	reg [2:0] tx_state;
+	reg [7:0] data_counter = 0;
+	reg [2:0] state = 0;
+
+	reg [7:0] temp_data = 66; // palindromic binary
 
 	always @(posedge user_clock) begin : proc_usb_rs232_txd
-		if(rst) begin
-			counter <= 0;
-			counter_baud <= 0;
-			buffer <= 0;
-		end 
-		else 
+		if (counter_baud == 43) // divide clock from 40mhz to 8*115200 bps
 		begin
-			if (counter_baud == 43) // divide clock from 40mhz to 8*115200 bps
-			begin
-				counter_baud <= 0;
-				usb_rs232_txd <= usb_rs232_rxd; // echo back for now
-			end
-			else
-				counter_baud <= counter_baud + 1;
-			// ---------------------------------------------------------------
-			if (counter == 10000000) // divide clock from 40mhz to 4 hz for flashing leds
-			begin
-				counter <= 0;
-				gpio_led1 <= ~gpio_led1;
-			end
-			else
-				counter <= counter+1;
+				case (state) // only initiate a send in idle
+				0 : begin
+					if (send_trigger)
+					begin
+						data_counter <= 1;
+						usb_rs232_txd <= 0; // send start bit
+						state <= 1; // start bit state
+					end
+				end
+				1 : begin
+					data_counter <= data_counter << 1;
+					temp_data <= temp_data << 1;
+					if (data_counter == 128)
+					begin
+						state <= 2;
+					end
+					else
+						usb_rs232_txd <= temp_data[7];
+				end
+				2 : begin
+					usb_rs232_txd <= 1; // stop bit is high
+					state <= 0;
+				end
+
+				default : usb_rs232_txd <= 1; // idle is high
+
+				endcase
+			counter_baud <= 0;
 		end
+		else
+			counter_baud <= counter_baud + 1;
+
+		if (state == 0 & send_trigger == 0)
+			usb_rs232_txd <= usb_rs232_rxd; // echo back for now
+
+		// ---------------------------------------------------------------
+		if (counter == 10000000) // divide clock from 40mhz to 4 hz for flashing leds
+		begin
+			counter <= 0;
+			gpio_led1 <= ~gpio_led1;
+		end
+		else
+			counter <= counter+1;
+
+
 	end
 endmodule
+
