@@ -29,6 +29,7 @@ module main_tb;
 	reg rst;
 	reg usb_rs232_rxd;
 	reg send_trigger;
+	reg [7:0] send_data;
 
 	// Outputs
 	wire usb_rs232_txd;
@@ -40,6 +41,7 @@ module main_tb;
 		.rst(rst), 
 		.usb_rs232_rxd(usb_rs232_rxd), 
 		.send_trigger(send_trigger), 
+		.send_data(send_data), 
 		.usb_rs232_txd(usb_rs232_txd), 
 		.gpio_led1(gpio_led1)
 	);
@@ -56,8 +58,11 @@ module main_tb;
 		#100;
 		send_trigger <= 1;
 		 #800 send_trigger <= 0;
-		 #90000 send_trigger <= 1;
-		 #800 send_trigger <= 0;
+		 #90000 
+		 send_data <= "A"; send_trigger <= 1; #800 send_trigger <= 0; #90000;
+		 send_data <= "L"; send_trigger <= 1; #800 send_trigger <= 0; #90000;
+		 send_data <= "E"; send_trigger <= 1; #800 send_trigger <= 0; #90000;
+		 send_data <= "X"; send_trigger <= 1; #800 send_trigger <= 0; #90000;
         
 		// Add stimulus here
 
