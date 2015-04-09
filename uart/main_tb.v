@@ -52,9 +52,11 @@ module main_tb;
 		send_trigger = 0;
 
 		// Wait 100 ns for global reset to finish
-		// usb_rs232_rxd <= 0'bZ;
+		usb_rs232_rxd <= 0'bZ;
 		#100;
 		send_trigger <= 1;
+		 #800 send_trigger <= 0;
+		 #90000 send_trigger <= 1;
 		 #800 send_trigger <= 0;
         
 		// Add stimulus here

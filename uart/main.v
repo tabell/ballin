@@ -46,7 +46,7 @@ module main(
 	reg [7:0] data_counter = 0;
 	reg [2:0] state = 0;
 
-	reg [7:0] temp_data = 66; // palindromic binary
+	reg [7:0] temp_data = 65; // palindromic binary
 
 	always @(posedge user_clock) begin : proc_usb_rs232_txd
 		if (counter_baud == 43) // divide clock from 40mhz to 8*115200 bps
@@ -55,25 +55,41 @@ module main(
 				0 : begin
 					if (send_trigger)
 					begin
-						data_counter <= 1;
-						usb_rs232_txd <= 0; // send start bit
 						state <= 1; // start bit state
 					end
 				end
 				1 : begin
-					data_counter <= data_counter << 1;
-					temp_data <= temp_data << 1;
-					if (data_counter == 128)
-					begin
+						usb_rs232_txd <= 0; // send start bit
+						data_counter <= 1;
+						counter_symbol <= 0;
 						state <= 2;
 					end
-					else
-						usb_rs232_txd <= temp_data[7];
-				end
-				2 : begin
-					usb_rs232_txd <= 1; // stop bit is high
-					state <= 0;
-				end
+				2 : begin 
+						counter_symbol <= counter_symbol + 1;
+						if (counter_symbol == 7)
+						begin
+							data_counter <= data_counter << 1;
+							temp_data <= temp_data << 1;
+							if (data_counter == 0)
+							begin
+								state <= 3;
+								usb_rs232_txd <= 1;
+								counter_symbol <= 0;
+							end
+							else
+								usb_rs232_txd <= temp_data[7];
+						end
+					end
+				3 : begin
+						usb_rs232_txd <= 1; // stop bit is high
+						counter_symbol <= counter_symbol + 1;
+						if (counter_symbol == 7)
+						begin
+							state <= 0;
+							counter_symbol <= 0;
+							temp_data <= 66;
+						end
+					end
 
 				default : usb_rs232_txd <= 1; // idle is high
 
