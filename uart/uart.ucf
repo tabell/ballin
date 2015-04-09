@@ -14,9 +14,9 @@ NET	"rst" LOC = "V4";
 # User LEDs			
 ############################################################################	
 NET GPIO_LED1         LOC = P4  | IOSTANDARD = LVCMOS18;               # "GPIO_LED1"
-NET GPIO_LED2         LOC = L6  | IOSTANDARD = LVCMOS18;               # "GPIO_LED2"
-NET GPIO_LED3         LOC = F5  | IOSTANDARD = LVCMOS18;               # "GPIO_LED3"
-NET GPIO_LED4         LOC = C2  | IOSTANDARD = LVCMOS18;               # "GPIO_LED4"
+# NET GPIO_LED2         LOC = L6  | IOSTANDARD = LVCMOS18;               # "GPIO_LED2"
+# NET GPIO_LED3         LOC = F5  | IOSTANDARD = LVCMOS18;               # "GPIO_LED3"
+# NET GPIO_LED4         LOC = C2  | IOSTANDARD = LVCMOS18;               # "GPIO_LED4"
 
 ############################################################################	
 # Silicon Labs CP2102 USB-to-UART Bridge Chip

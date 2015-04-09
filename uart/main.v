@@ -1,56 +1,51 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// company: 
+// engineer: 
 // 
-// Create Date:    13:55:06 04/08/2015 
-// Design Name: 
-// Module Name:    main 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
+// create date:    13:55:06 04/08/2015 
+// design name: 
+// module name:    main 
+// project name: 
+// target devices: 
+// tool versions: 
+// description: 
 //
-// Dependencies: 
+// dependencies: 
 //
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
+// revision: 
+// revision 0.01 - file created
+// additional comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
 module main(
-    input USER_CLOCK,
+    input user_clock,
     input rst,
-    input USB_RS232_RXD,
-    output USB_RS232_TXD,
-	output GPIO_LED1,
-	output GPIO_LED2,
-	output GPIO_LED3,
-	output GPIO_LED4
+    input usb_rs232_rxd,
+    output usb_rs232_txd,
+	output gpio_led1
     );
 	// internal
 	reg [8:0] buffer;
-	wire USER_CLOCK;
+	wire user_clock;
 
 	// outputs
-	reg USB_RS232_TXD = 0;
-	reg GPIO_LED1 = 0;
-	reg GPIO_LED2 = 0;
-	reg GPIO_LED3 = 0;
-	reg GPIO_LED4 = 0;
+	reg usb_rs232_txd = 0;
+	reg gpio_led1 = 0;
 
 	// inputs
 	wire rst;
-	wire USB_RS232_RXD;
+	wire usb_rs232_rxd;
 
 	reg [25:0] counter;
 	reg [5:0] counter_baud; // count to 43
 	reg [2:0] counter_symbol; // count to 43
 
-	always @(posedge USER_CLOCK) begin : proc_USB_RS232_TXD
+	reg [7:0] data_counter;
+	reg [2:0] tx_state;
+
+	always @(posedge user_clock) begin : proc_usb_rs232_txd
 		if(rst) begin
-			// USB_RS232_TXD <= 0;
-			// buffer <= 0;
 			counter <= 0;
 			counter_baud <= 0;
 			buffer <= 0;
@@ -60,16 +55,15 @@ module main(
 			if (counter_baud == 43) // divide clock from 40mhz to 8*115200 bps
 			begin
 				counter_baud <= 0;
-				USB_RS232_TXD <= USB_RS232_RXD;
+				usb_rs232_txd <= usb_rs232_rxd; // echo back for now
 			end
 			else
 				counter_baud <= counter_baud + 1;
 			// ---------------------------------------------------------------
-			if (counter == 10000000) // divide clock from 40mhz to 4 hz for flashing LEDs
+			if (counter == 10000000) // divide clock from 40mhz to 4 hz for flashing leds
 			begin
 				counter <= 0;
-				GPIO_LED1 <= ~GPIO_LED1;
-				GPIO_LED2 <= ~GPIO_LED2;
+				gpio_led1 <= ~gpio_led1;
 			end
 			else
 				counter <= counter+1;
