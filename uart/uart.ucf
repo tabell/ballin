@@ -1,0 +1,8 @@
+NET "serial_rx" LOC = "R7"; # UART RX
+NET "serial_tx" LOC = "T7"; # UART TX
+NET "clk" LOC = "V10"; # 40 MHz clock (will be divided to 4Hz)
+NET	"rst" LOC = "V4";
+NET "led[0]" LOC = "P4"; # LED
+NET "led[1]" LOC = "L6"; # LED
+NET "led[2]" LOC = "F5"; # LED
+NET "led[3]" LOC = "C2"; # LED
