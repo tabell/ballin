@@ -1,8 +1,25 @@
-NET "serial_rx" LOC = "R7"; # UART RX
-NET "serial_tx" LOC = "T7"; # UART TX
-NET "clk" LOC = "V10"; # 40 MHz clock (will be divided to 4Hz)
+############################################################################	
+# Texas Instruments CDCE913 Triple-Output PLL Clock Chip
+#   Y1: 40 MHz, USER_CLOCK can be used as external configuration clock
+#   Y2: 66.667 MHz
+#   Y3: 100 MHz 
+############################################################################	
+NET USER_CLOCK        LOC = V10 | IOSTANDARD = LVCMOS33;               # "USER_CLOCK"
+
+NET USER_CLOCK TNM_NET = USER_CLOCK;
+TIMESPEC TS_USER_CLOCK = PERIOD USER_CLOCK 40000 kHz;
+
 NET	"rst" LOC = "V4";
-NET "led[0]" LOC = "P4"; # LED
-NET "led[1]" LOC = "L6"; # LED
-NET "led[2]" LOC = "F5"; # LED
-NET "led[3]" LOC = "C2"; # LED
+############################################################################	
+# User LEDs			
+############################################################################	
+NET GPIO_LED1         LOC = P4  | IOSTANDARD = LVCMOS18;               # "GPIO_LED1"
+NET GPIO_LED2         LOC = L6  | IOSTANDARD = LVCMOS18;               # "GPIO_LED2"
+NET GPIO_LED3         LOC = F5  | IOSTANDARD = LVCMOS18;               # "GPIO_LED3"
+NET GPIO_LED4         LOC = C2  | IOSTANDARD = LVCMOS18;               # "GPIO_LED4"
+
+############################################################################	
+# Silicon Labs CP2102 USB-to-UART Bridge Chip
+############################################################################	
+NET USB_RS232_RXD     LOC = R7  | IOSTANDARD = LVCMOS33;               # "USB_RS232_RXD"
+NET USB_RS232_TXD     LOC = T7  | IOSTANDARD = LVCMOS33;               # "USB_RS232_TXD"
