@@ -4,7 +4,7 @@
 #   Y2: 66.667 MHz
 #   Y3: 100 MHz 
 ############################################################################	
-NET USER_CLOCK        LOC = V10 | IOSTANDARD = LVCMOS33;               # "USER_CLOCK"
+NET clk        LOC = V10 | IOSTANDARD = LVCMOS33;               # "USER_CLOCK"
 
 NET USER_CLOCK TNM_NET = USER_CLOCK;
 TIMESPEC TS_USER_CLOCK = PERIOD USER_CLOCK 40000 kHz;

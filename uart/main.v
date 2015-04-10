@@ -19,7 +19,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module main(
-  input user_clock,
+  input clk,
   input rst,
   input usb_rs232_rxd,
   input send_trigger,
@@ -27,11 +27,6 @@ module main(
   output usb_rs232_txd,
   output gpio_led1
 );
-   // internal
-  reg [8:0] buffer = 0;
-  wire user_clock;
-  reg sending = 0;
-  reg ready_sending = 0;
 
    // outputs
   reg usb_rs232_txd = 1;
@@ -43,38 +38,59 @@ module main(
   wire send_trigger;
   wire [7:0] send_data;
 
+   // internal
+  reg [8:0] buffer = 0;
+  wire clk;
+  reg ready_sending = 0;
+
   reg [24:0] led_flash_gen;
   reg [5:0] baud_gen = 0; // this will count to 43 to trigger uart_enable
   reg [5:0] char_gen = 0; // this will count from 0 to 7 to count baud pulses for each character
   reg uart_enable = 0; // this will go high once per UART baud pulse
   reg sending = 0;
+  reg [3:0] char = 0;
 
   reg [7:0] test_char = "G";
   
-  always begin
+  always @(posedge clk) begin
     usb_rs232_txd <= usb_rs232_rxd;
 
-    if (baud_gen == 43)
-      if (sending) begin
-        uart_enable <= 1;
-        baud_gen <= 0;
-      end if
+    if (baud_gen == 43) begin
+      baud_gen <= 0;
+    end
     else begin
       baud_gen <= baud_gen + 1;
       uart_enable <= 0;
     end
 
-    if (char_gen == 7)
-    begin
+    if (char == 9) 
+      char <= 0;
+
+    if (char_gen == 7) begin
       char_gen <= 0;
+      char <= char + 1;
     end
     else
     begin
-      char_gen <= char_gen + 1;
+      if (sending) begin
+        char_gen <= char_gen + 1;
+      end
+    end
+    if (sending) begin
+      case (char)
+        0 : usb_rs232_txd <= 0;
+        9 : usb_rs232_txd <= 1;
+        default : usb_rs232_txd <= send_data[7:0] << (char-1);
+      endcase;
     end
 
+    if (send_trigger)
+      sending <= 1;
 
-    if(uart_enable) begin
+    if(uart_enable) begin // baud rate
+      if (sending) begin
+        uart_enable <= 1;
+      end
 
     end
 

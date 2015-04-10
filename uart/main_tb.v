@@ -25,7 +25,7 @@
 module main_tb;
 
 	// Inputs
-	reg user_clock;
+	reg clk;
 	reg rst;
 	reg usb_rs232_rxd;
 	reg send_trigger;
@@ -37,7 +37,7 @@ module main_tb;
 
 	// Instantiate the Unit Under Test (UUT)
 	main uut (
-		.user_clock(user_clock), 
+		.clk(clk), 
 		.rst(rst), 
 		.usb_rs232_rxd(usb_rs232_rxd), 
 		.send_trigger(send_trigger), 
@@ -48,7 +48,7 @@ module main_tb;
 
 	initial begin
 		// Initialize Inputs
-		user_clock = 0;
+		clk = 0;
 		rst = 0;
 		usb_rs232_rxd = 0;
 		send_trigger = 0;
@@ -68,7 +68,7 @@ module main_tb;
 
 	end
 	always 
-		#10 user_clock <= ~user_clock;
+		#10 clk <= ~clk;
       
 endmodule
 
