@@ -55,7 +55,7 @@ module main_tb;
 
 		// Wait 100 ns for global reset to finish
 		usb_rs232_rxd <= 0'bZ;
-		#100;
+		#110;
 		send_trigger <= 1;
 		send_data <= "Q";
 		#20 send_trigger <= 0;

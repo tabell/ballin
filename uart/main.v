@@ -63,12 +63,14 @@ module main(
       uart_enable <= 0;
     end
 
-    if (char == 9) 
-      char <= 0;
 
     if (char_gen == 7) begin
+      if (char == 9)
+        sending <= 0;
       char_gen <= 0;
       char <= char + 1;
+      if (char == 9) 
+        char <= 0;
     end
     else
     begin
@@ -80,7 +82,7 @@ module main(
       case (char)
         0 : usb_rs232_txd <= 0;
         9 : usb_rs232_txd <= 1;
-        default : usb_rs232_txd <= send_data[7:0] << (char-1);
+        default : usb_rs232_txd <= send_data[(7-(char-1))];
       endcase;
     end
 

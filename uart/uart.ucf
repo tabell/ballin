@@ -1,13 +1,13 @@
 ############################################################################	
 # Texas Instruments CDCE913 Triple-Output PLL Clock Chip
-#   Y1: 40 MHz, USER_CLOCK can be used as external configuration clock
+#   Y1: 40 MHz, clk can be used as external configuration clock
 #   Y2: 66.667 MHz
 #   Y3: 100 MHz 
 ############################################################################	
-NET clk        LOC = V10 | IOSTANDARD = LVCMOS33;               # "USER_CLOCK"
+NET clk        LOC = V10 | IOSTANDARD = LVCMOS33;               # "clk"
 
-NET USER_CLOCK TNM_NET = USER_CLOCK;
-TIMESPEC TS_USER_CLOCK = PERIOD USER_CLOCK 40000 kHz;
+NET clk TNM_NET = clk;
+TIMESPEC TS_clk = PERIOD clk 40000 kHz;
 
 NET	"send_trigger" LOC = "V4";
 ############################################################################	
