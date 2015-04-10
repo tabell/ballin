@@ -57,13 +57,13 @@ module main_tb;
 		usb_rs232_rxd <= 0'bZ;
 		#100;
 		send_trigger <= 1;
-		 #800 send_trigger <= 0;
-		 #90000 
-		 send_data <= "A"; send_trigger <= 1; #800 send_trigger <= 0; #90000;
+		send_data <= "Q";
+		#20 send_trigger <= 0;
+/*		 send_data <= "A"; send_trigger <= 1; #800 send_trigger <= 0; #90000;
 		 send_data <= "L"; send_trigger <= 1; #800 send_trigger <= 0; #90000;
 		 send_data <= "E"; send_trigger <= 1; #800 send_trigger <= 0; #90000;
 		 send_data <= "X"; send_trigger <= 1; #800 send_trigger <= 0; #90000;
-        
+        */
 		// Add stimulus here
 
 	end
