@@ -53,7 +53,6 @@ module main(
   reg [7:0] test_char = "G";
   
   always @(posedge clk) begin
-    usb_rs232_txd <= usb_rs232_rxd;
 
     if (baud_gen == 43) begin
       baud_gen <= 0;
@@ -85,6 +84,8 @@ module main(
         default : usb_rs232_txd <= send_data[(7-(char-1))];
       endcase;
     end
+    else
+      usb_rs232_txd <= usb_rs232_rxd;
 
     if (send_trigger)
       sending <= 1;
