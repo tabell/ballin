@@ -4,9 +4,9 @@
 // Company: 
 // Engineer:
 //
-// Create Date:   20:45:18 04/08/2015
+// Create Date:   20:40:25 04/11/2015
 // Design Name:   main
-// Module Name:   /home/alex/verilog/misc/uart/main_tb.v
+// Module Name:   /home/alex/verilog/misc/uart//main_tb.v
 // Project Name:  uart
 // Target Device:  
 // Tool versions:  
@@ -26,49 +26,48 @@ module main_tb;
 
 	// Inputs
 	reg clk;
-	reg rst;
-	reg usb_rs232_rxd;
-	reg send_trigger;
-	reg [7:0] send_data;
+	reg clk_en;
+	reg [7:0] q_in;
+	reg trigger;
 
 	// Outputs
-	wire usb_rs232_txd;
-	wire gpio_led1;
+	wire s_out;
 
 	// Instantiate the Unit Under Test (UUT)
 	main uut (
 		.clk(clk), 
-		.rst(rst), 
-		.usb_rs232_rxd(usb_rs232_rxd), 
-		.send_trigger(send_trigger), 
-		.send_data(send_data), 
-		.usb_rs232_txd(usb_rs232_txd), 
-		.gpio_led1(gpio_led1)
+		.clk_en(clk_en), 
+		.q_in(q_in), 
+		.trigger(trigger), 
+		.busy(busy),
+		.s_out(s_out)
 	);
 
 	initial begin
 		// Initialize Inputs
 		clk = 0;
-		rst = 0;
-		usb_rs232_rxd = 0;
-		send_trigger = 0;
+		clk_en = 0;
+		q_in = 0;
+		trigger = 0;
 
 		// Wait 100 ns for global reset to finish
-		usb_rs232_rxd <= 0'bZ;
-		#110;
-		send_trigger <= 1;
-		send_data <= "Q";
-		#20 send_trigger <= 0;
-		 send_data <= "A"; send_trigger <= 1; #800 send_trigger <= 0; #900;
-		 send_data <= "L"; send_trigger <= 1; #800 send_trigger <= 0; #900;
-		 send_data <= "E"; send_trigger <= 1; #800 send_trigger <= 0; #900;
-		 send_data <= "X"; send_trigger <= 1; #800 send_trigger <= 0; #900;
+		#100;
         
+		clk_en <= 1;
+        trigger <= 1;
+        q_in <= 8'b11110000;
+        #10 trigger <= 0;
+
+        #220;
+        trigger <= 1;
+        q_in <= 8'b00000000;
+        #10 trigger <= 0;
 		// Add stimulus here
 
 	end
-	always 
-		#10 clk <= ~clk;
+	always begin
+		#5 clk <= ~clk;
+	end
       
 endmodule
 
