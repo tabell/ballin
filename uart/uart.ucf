@@ -6,14 +6,14 @@
 ############################################################################	
 NET clk        LOC = V10 | IOSTANDARD = LVCMOS33;               # "clk"
 
-NET clk TNM_NET = clk;
-TIMESPEC TS_clk = PERIOD clk 40000 kHz;
+# NET clk TNM_NET = clk;
+# TIMESPEC TS_clk = PERIOD clk 40000 kHz;
 
-NET	"send_trigger" LOC = "V4";
+NET	trigger LOC = "V4";
 ############################################################################	
 # User LEDs			
 ############################################################################	
-NET GPIO_LED1         LOC = P4  | IOSTANDARD = LVCMOS18;               # "GPIO_LED1"
+# NET GPIO_LED1         LOC = P4  | IOSTANDARD = LVCMOS18;               # "GPIO_LED1"
 # NET GPIO_LED2         LOC = L6  | IOSTANDARD = LVCMOS18;               # "GPIO_LED2"
 # NET GPIO_LED3         LOC = F5  | IOSTANDARD = LVCMOS18;               # "GPIO_LED3"
 # NET GPIO_LED4         LOC = C2  | IOSTANDARD = LVCMOS18;               # "GPIO_LED4"
@@ -21,5 +21,5 @@ NET GPIO_LED1         LOC = P4  | IOSTANDARD = LVCMOS18;               # "GPIO_L
 ############################################################################	
 # Silicon Labs CP2102 USB-to-UART Bridge Chip
 ############################################################################	
-NET USB_RS232_RXD     LOC = R7  | IOSTANDARD = LVCMOS33;               # "USB_RS232_RXD"
-NET USB_RS232_TXD     LOC = T7  | IOSTANDARD = LVCMOS33;               # "USB_RS232_TXD"
+# NET USB_RS232_RXD     LOC = R7  | IOSTANDARD = LVCMOS33;               # "USB_RS232_RXD"
+NET s_out     LOC = T7  | IOSTANDARD = LVCMOS33;               # "USB_RS232_TXD"
