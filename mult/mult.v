@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -24,26 +25,36 @@ module mult(
     output [63:0] data_result,
     input ctrl_enable,
     output ctrl_done,
+    input rst,
     input clk
     );
 
-	integer [31:0] a;
-	integer [31:0] b;
-	integer [31:0] result;
+	reg [31:0] a;
+	reg [31:0] b;
 
-	reg [1:0] state := 0;
+	reg [1:0] state;
+
+	reg ctrl_done;
+	reg [63:0] data_result;
+
 
 always @(posedge clk) begin : proc_mult
-	if(ctrl_enable) begin 
-		if (state == 0) begin
-			// sample inputs on trigger
-			a <= data_multiplicand;
-			b <= data_multiplier;
-			state <= 1;
-		end
-		elsif(state == 1) begin
-			result <= {a & b};
-			done <= 1;
+	if (rst == 1) begin
+		state <= 0;
+		ctrl_done <= 0;
+	end else begin
+		if(ctrl_enable) begin 
+			if (state == 0) begin
+				// sample inputs on trigger
+				a <= data_multiplicand;
+				b <= data_multiplier;
+				state <= 1;
+			end
+			if(state == 1) begin
+				data_result <= {a,b};
+				ctrl_done <= 1;
+				state <= 0;
+			end
 		end
 	end
 end

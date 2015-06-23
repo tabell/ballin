@@ -29,6 +29,7 @@ module mult_tb;
 	reg [31:0] data_multiplier;
 	reg ctrl_enable;
 	reg clk;
+	reg rst;
 
 	// Outputs
 	wire [63:0] data_result;
@@ -41,6 +42,7 @@ module mult_tb;
 		.data_result(data_result), 
 		.ctrl_enable(ctrl_enable), 
 		.ctrl_done(ctrl_done), 
+		.rst(rst),
 		.clk(clk)
 	);
 
@@ -50,12 +52,23 @@ module mult_tb;
 		data_multiplier = 0;
 		ctrl_enable = 0;
 		clk = 0;
+		rst = 1;
 
-		// Wait 100 ns for global reset to finish
-		#100;
-        
-		// Add stimulus here
+		$monitor("a=%b, b=%b, en=%b, done=%b, res=%b",
+			data_multiplicand,data_multiplier,ctrl_enable,ctrl_done,data_result);
+		#100; // Wait 100 ns for global reset to finish
+		#10 rst <= 0;
+		data_multiplicand <= 7;
+		data_multiplier <= 5;
+		#10 ctrl_enable <= 1;
+		while (ctrl_done == 0) begin
+			#10;
+		end
+		ctrl_enable <= 0;
 
+	end
+	always begin // create clock
+		#5 clk <= ~clk;
 	end
       
 endmodule
